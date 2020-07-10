@@ -25,19 +25,16 @@
 
 class SimpleBot
   class << self
-    def settings
-      obj = Object.new
-      @values.each do |key, value|
-        obj.define_singleton_method "#{key}" do
-          value
-        end
-      end
+    obj = Object.new
+
+    Kernel.send :define_method, :settings do
       obj
     end
 
-    def setting(key, value)
-      @values ||= {}
-      @values[key] = value
+    Kernel.send :define_method, :setting do |key, value|
+      obj.define_singleton_method "#{key}" do
+        value
+      end
     end
 
     def respond(keyword, &block)
