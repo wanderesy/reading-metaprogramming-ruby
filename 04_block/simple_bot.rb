@@ -38,9 +38,17 @@ class SimpleBot
     end
 
     def respond(keyword, &block)
-      define_method :ask do |arg|
-        arg == keyword ? block.call : nil
-      end
+      @methods ||= {}
+      @methods[keyword] = block
+    end
+  end
+
+  def ask(arg)
+    @methods = self.class.instance_variable_get(:@methods)
+    if @methods.key?(arg)
+      @methods[arg].call
+    else
+      nil
     end
   end
 end
